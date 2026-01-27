@@ -146,12 +146,12 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={loading}
-                className="mt-3 inline-flex w-44 items-center justify-center rounded-xl bg-violet-600 px-6 py-4 text-center text-base font-semibold text-white hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-60"
+                className="whitespace-nowrap mt-3 inline-flex w-44 items-center justify-center rounded-xl bg-violet-600 px-72 py-4 text-center text-base font-semibold text-white hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? "Loading..." : "Sign In"}
               </button>
 
-              <p className="pt-10 text-sm text-slate-500">
+              <p className="pt-1 text-sm text-slate-500">
                 Don&apos;t have an account?{" "}
                 <Link
                   href="/siswa/register"

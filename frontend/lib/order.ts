@@ -1,12 +1,6 @@
+// lib/order.ts
 import { getRoleToken } from "@/lib/auth";
-
-export type CartItem = {
-  id_menu: number;
-  nama_makanan: string;
-  harga: number;
-  qty: number;
-  raw?: any;
-};
+import type { CartItem } from "@/lib/cart";
 
 function pickStanId(item: CartItem): number {
   const r = item.raw ?? {};
@@ -21,7 +15,9 @@ function pickStanId(item: CartItem): number {
     r.id_penjual,
   ];
 
-  const found = candidates.find((v) => v !== undefined && v !== null && String(v).trim() !== "");
+  const found = candidates.find(
+    (v: any) => v !== undefined && v !== null && String(v).trim() !== ""
+  );
   const n = Number(found);
 
   if (!Number.isFinite(n) || n <= 0) {
@@ -58,7 +54,7 @@ export async function checkoutCart(items: CartItem[]) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         token,
-        makerID: 1,
+        makerID: "1", // ✅ jadikan string biar sama dengan backend header makerID
         payload,
       }),
     });
