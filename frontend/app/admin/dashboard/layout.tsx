@@ -63,7 +63,13 @@ export default function AdminDashboardLayout({
                             href="/admin/dashboard/diskon"
                             className="text-sm font-medium text-slate-600 hover:text-violet-700"
                         >
-                            Diskon Bulanan
+                            Tambah Diskon
+                        </Link>
+                        <Link
+                            href="/admin/dashboard/menu-diskon"
+                            className="text-sm font-medium text-slate-600 hover:text-violet-700"
+                        >
+                            Diskon
                         </Link>
                     </nav>
 
@@ -131,7 +137,13 @@ export default function AdminDashboardLayout({
                                 href="/admin/dashboard/diskon"
                                 className="rounded-full border border-slate-200 px-3 py-1 text-xs font-semibold text-slate-700"
                             >
-                                Diskon Bulanan
+                                Tambah Diskon
+                            </Link>
+                            <Link
+                                href="/admin/dashboard/menu-diskon"
+                                className="rounded-full border border-slate-200 px-3 py-1 text-xs font-semibold text-slate-700"
+                            >
+                                Diskon
                             </Link>
                         </div>
                     </div>

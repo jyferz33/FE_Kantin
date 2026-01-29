@@ -142,9 +142,15 @@ export default function AdminDashboardPage() {
           badge="Edit"
         />
         <CardLink
-          title="Diskon Bulanan"
+          title="Tambah Diskon"
           desc="Atur diskon berdasarkan bulan/momen tertentu."
           href="/admin/dashboard/diskon"
+          badge="Promo"
+        />
+        <CardLink
+          title="Diskon"
+          desc="Atur diskon berdasarkan bulan/momen tertentu."
+          href="/admin/dashboard/menu-diskon"
           badge="Promo"
         />
       </div>

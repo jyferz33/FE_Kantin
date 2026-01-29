@@ -5,26 +5,22 @@ import { getRoleToken } from "@/lib/auth";
 import { useCart } from "@/components/siswa/cart-provider";
 
 type MenuDiskonItem = {
-  id_menu?: number;
-  id?: number;
-  nama_makanan?: string;
-  jenis?: string;
-  harga?: string | number;
-  deskripsi?: string;
+  id: number;
+  id_menu: number;
+  id_diskon: number;
 
-  // biasanya ada field diskon (kalau backend punya)
-  harga_asli?: string | number;
-  diskon?: string | number;
-  potongan?: string | number;
+  nama_makanan: string;
+  harga: number;
+  jenis: string;
+  foto: string | null;
+  deskripsi?: string | null;
+  id_stan?: number;
 
-  foto?: string;
-  gambar?: string;
-  image?: string;
-
-  nama_stan?: string;
-  nama_kantin?: string;
-  stan?: string;
-  nama_pemilik?: string;
+  // injected dari parent diskon
+  nama_diskon?: string;
+  persentase_diskon?: number;
+  tanggal_awal?: string;
+  tanggal_akhir?: string;
 
   [key: string]: any;
 };
@@ -56,40 +52,20 @@ function formatRupiah(value: string | number | undefined) {
   }).format(n);
 }
 
-function getId(item: MenuDiskonItem) {
-  return Number(item.id_menu ?? item.id ?? item.ID ?? item.Id ?? 0);
+// ✅ hitung harga setelah diskon (backend tidak mengembalikan)
+function hargaSetelahDiskon(harga: number, persen?: number | null) {
+  const p = Number(persen ?? 0);
+  if (!p || Number.isNaN(p)) return harga;
+  return Math.round(harga - harga * (p / 100));
 }
 
-function pickStanName(item: MenuDiskonItem) {
-  return (
-    item.nama_stan ||
-    item.nama_kantin ||
-    item.stan ||
-    item.nama_pemilik ||
-    item?.stan_name ||
-    item?.kantin ||
-    "-"
-  );
-}
+function getFotoUrl(foto: string | null | undefined) {
+  if (!foto) return "";
+  if (foto.startsWith("http")) return foto;
 
-function getFotoUrl(item: MenuDiskonItem) {
-  const url = item.foto || item.gambar || item.image;
-  if (!url) return "";
-  if (typeof url === "string" && url.startsWith("http")) return url;
-
-  // foto biasanya relative dari domain root
+  // ✅ encodeURI wajib karena filename bisa ada spasi
   const origin = "https://ukk-p2.smktelkom-mlg.sch.id/";
-  return origin + String(url).replace(/^\/+/, "");
-}
-
-function pickDiskonLabel(item: MenuDiskonItem) {
-  const d = item.diskon ?? item.potongan;
-  if (d == null || d === "") return "";
-  const n = Number(d);
-  if (Number.isNaN(n)) return String(d);
-  // kalau d = 20 berarti 20%
-  if (n > 0 && n <= 100) return `${n}% OFF`;
-  return `${n} OFF`;
+  return origin + encodeURI(String(foto).replace(/^\/+/, ""));
 }
 
 async function postMenuDiskon(search: string) {
@@ -97,7 +73,7 @@ async function postMenuDiskon(search: string) {
   if (!token) throw new Error("Token siswa tidak ada. Login siswa dulu.");
 
   const fd = new FormData();
-  fd.append("search", search);
+  fd.append("search", search ?? "");
 
   const res = await fetch(joinUrl(API_BASE, "getmenudiskonsiswa"), {
     method: "POST",
@@ -115,20 +91,10 @@ async function postMenuDiskon(search: string) {
     throw new Error(data?.message || data?.msg || raw || `HTTP ${res.status}`);
   }
 
-  const list =
-    Array.isArray(data)
-      ? data
-      : Array.isArray(data?.data)
-      ? data.data
-      : Array.isArray(data?.menu)
-      ? data.menu
-      : Array.isArray(data?.result)
-      ? data.result
-      : Array.isArray(data?.items)
-      ? data.items
-      : [];
+  // ✅ ini adalah list DISKON, bukan list menu
+  const diskonList = Array.isArray(data?.data) ? data.data : [];
 
-  return Array.isArray(list) ? (list as MenuDiskonItem[]) : [];
+  return diskonList;
 }
 
 export default function MenuDiskonSiswaPage() {
@@ -144,8 +110,42 @@ export default function MenuDiskonSiswaPage() {
     setError("");
 
     try {
-      const list = await postMenuDiskon(keyword);
-      setRows(list);
+      const diskonList = await postMenuDiskon(keyword);
+
+      /**
+       * ✅ FLATTEN:
+       * diskon[] -> menu_diskon[]
+       * agar foto/harga muncul karena foto ada di menu_diskon
+       */
+      const flattened: MenuDiskonItem[] = diskonList.flatMap((diskon: any) =>
+        (diskon.menu_diskon ?? []).map((menu: any) => ({
+          ...menu,
+
+          // inject data diskon
+          nama_diskon: diskon.nama_diskon,
+          persentase_diskon: diskon.persentase_diskon,
+          tanggal_awal: diskon.tanggal_awal,
+          tanggal_akhir: diskon.tanggal_akhir,
+
+          // pastikan field wajib ada
+          id: Number(menu.id ?? menu.id_menu ?? 0),
+          id_menu: Number(menu.id_menu ?? menu.id ?? 0),
+          id_diskon: Number(menu.id_diskon ?? diskon.id ?? 0),
+          harga: Number(menu.harga ?? 0),
+          nama_makanan: String(menu.nama_makanan ?? "Menu"),
+          jenis: String(menu.jenis ?? "-"),
+          foto: menu.foto ?? null,
+        }))
+      );
+
+      // ✅ hilangkan duplikat (kadang backend ngirim dobel)
+      const uniqMap = new Map<string, MenuDiskonItem>();
+      for (const it of flattened) {
+        const key = `${it.id_diskon}-${it.id_menu}`;
+        if (!uniqMap.has(key)) uniqMap.set(key, it);
+      }
+
+      setRows(Array.from(uniqMap.values()));
     } catch (e: any) {
       setRows([]);
       setError(e?.message || "Gagal memuat menu diskon.");
@@ -162,24 +162,20 @@ export default function MenuDiskonSiswaPage() {
   const totalShown = useMemo(() => rows.length, [rows]);
 
   function handlePesan(menu: MenuDiskonItem) {
-    const id = getId(menu);
-    if (!id) return;
-
-    const hargaNum = Number(menu.harga ?? 0);
+    const hargaDiskon = hargaSetelahDiskon(menu.harga, menu.persentase_diskon);
 
     addItem(
       {
-        id_menu: id,
-        nama_makanan: String(menu.nama_makanan ?? "Menu"),
-        harga: Number.isNaN(hargaNum) ? 0 : hargaNum,
-        fotoUrl: getFotoUrl(menu) || undefined,
-        stanName: pickStanName(menu),
+        id_menu: menu.id_menu,
+        nama_makanan: menu.nama_makanan,
+        harga: hargaDiskon, // ✅ masukkan harga diskon ke cart
+        fotoUrl: getFotoUrl(menu.foto) || undefined,
+        stanName: `Diskon: ${menu.nama_diskon ?? "-"}`,
         raw: menu,
       },
       1
     );
 
-    // biar cepat lanjut checkout
     openCart();
   }
 
@@ -189,11 +185,11 @@ export default function MenuDiskonSiswaPage() {
       <div className="rounded-3xl border border-slate-200 bg-white p-6">
         <h1 className="text-xl font-extrabold text-slate-900">Menu Diskon</h1>
         <p className="mt-1 text-sm text-slate-500">
-          Menu promo / diskon dari berbagai stan. Klik Pesan untuk masuk keranjang.
+          Menu promo dari diskon admin. Klik Pesan untuk masuk keranjang.
         </p>
 
         <div className="mt-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-          {/* Cart button */}
+          {/* Cart */}
           <button
             type="button"
             onClick={openCart}
@@ -207,13 +203,16 @@ export default function MenuDiskonSiswaPage() {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder='Cari menu diskon (contoh: "rujak")...'
+              onKeyDown={(e) => {
+                if (e.key === "Enter") load(search);
+              }}
+              placeholder='Cari menu diskon (contoh: "rica")...'
               className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100 lg:w-72"
             />
             <button
               type="button"
               onClick={() => load(search)}
-              className="rounded-2xl bg-purple-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-purple-700"
+              className="rounded-2xl bg-red-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-red-700"
             >
               Cari
             </button>
@@ -240,6 +239,13 @@ export default function MenuDiskonSiswaPage() {
         <div className="rounded-3xl border border-rose-200 bg-rose-50 p-5 text-sm text-rose-700">
           <div className="font-extrabold">Gagal memuat menu diskon</div>
           <div className="mt-1 whitespace-pre-wrap">{error}</div>
+          <button
+            type="button"
+            onClick={() => load(search)}
+            className="mt-3 rounded-2xl bg-rose-600 px-4 py-2 text-sm font-bold text-white hover:bg-rose-700"
+          >
+            Coba Lagi
+          </button>
         </div>
       ) : null}
 
@@ -254,54 +260,59 @@ export default function MenuDiskonSiswaPage() {
             Tidak ada menu diskon.
           </div>
         ) : (
-          rows.map((it, idx) => {
-            const id = getId(it) || idx;
-            const fotoUrl = getFotoUrl(it);
-            const stanName = pickStanName(it);
-            const diskonLabel = pickDiskonLabel(it);
+          rows.map((it) => {
+            const fotoUrl = getFotoUrl(it.foto);
+            const persen = Number(it.persentase_diskon ?? 0);
+            const hargaDiskon = hargaSetelahDiskon(it.harga, persen);
 
             return (
               <div
-                key={id}
+                key={`${it.id_diskon}-${it.id_menu}`}
                 className="relative rounded-3xl border border-slate-200 bg-white p-5 transition hover:border-purple-300 hover:shadow-md"
               >
-                {/* badge diskon */}
-                {diskonLabel ? (
-                  <div className="absolute right-4 top-4 rounded-full bg-rose-600 px-3 py-1 text-xs font-extrabold text-white">
-                    {diskonLabel}
-                  </div>
-                ) : null}
+                {/* Badge */}
+                <div className="absolute right-4 top-4 rounded-full bg-rose-600 px-3 py-1 text-xs font-extrabold text-white">
+                  {persen}% OFF
+                </div>
 
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <div className="truncate text-sm font-extrabold text-slate-900">
-                      {it.nama_makanan ?? "-"}
+                      {it.nama_makanan}
                     </div>
-                    <div className="mt-1 truncate text-sm text-slate-600">
-                      Dari: <span className="font-semibold">{stanName}</span>
+                    <div className="mt-1 truncate text-xs text-slate-500">
+                      Diskon:{" "}
+                      <span className="font-bold text-red-700">
+                        {it.nama_diskon ?? "-"}
+                      </span>
                     </div>
                   </div>
 
-                  <div className="shrink-0 rounded-full bg-purple-50 px-3 py-1 text-xs font-bold text-purple-700">
-                    {formatRupiah(it.harga)}
+                  <div className="shrink-0 rounded-full bg-purple-50 px-3 py-1 text-xs font-bold text-red-700">
+                    {formatRupiah(hargaDiskon)}
                   </div>
                 </div>
 
-                {/* optional harga asli */}
-                {it.harga_asli != null ? (
-                  <div className="mt-2 text-xs text-slate-500">
-                    Harga asli:{" "}
-                    <span className="line-through">{formatRupiah(it.harga_asli)}</span>
-                  </div>
-                ) : null}
+                {/* Harga asli */}
+                <div className="mt-2 text-xs text-slate-500">
+                  Harga asli:{" "}
+                  <span className="font-semibold line-through">
+                    {formatRupiah(it.harga)}
+                  </span>
+                </div>
 
+                {/* Foto */}
                 <div className="mt-4 overflow-hidden rounded-2xl border border-slate-100 bg-slate-50">
                   {fotoUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={fotoUrl}
-                      alt={it.nama_makanan ?? "foto"}
+                      alt={it.nama_makanan}
                       className="h-36 w-full object-cover"
+                      onError={(e) => {
+                        // fallback jika link foto error
+                        (e.currentTarget as HTMLImageElement).style.display = "none";
+                      }}
                     />
                   ) : (
                     <div className="flex h-36 items-center justify-center text-xs text-slate-400">
@@ -310,6 +321,7 @@ export default function MenuDiskonSiswaPage() {
                   )}
                 </div>
 
+                {/* Desc */}
                 <div className="mt-3 text-sm text-slate-600">
                   <div className="line-clamp-2">{it.deskripsi ?? "—"}</div>
                 </div>
@@ -317,7 +329,7 @@ export default function MenuDiskonSiswaPage() {
                 <button
                   type="button"
                   onClick={() => handlePesan(it)}
-                  className="mt-4 w-full rounded-2xl bg-purple-600 px-4 py-3 text-sm font-extrabold text-white hover:bg-purple-700"
+                  className="mt-4 w-full rounded-2xl bg-red-600 px-4 py-3 text-sm font-extrabold text-white hover:bg-red-700"
                 >
                   Pesan
                 </button>

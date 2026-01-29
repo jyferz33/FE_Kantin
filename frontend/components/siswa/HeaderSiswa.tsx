@@ -11,25 +11,18 @@ export default function HeaderSiswa() {
     <header className="sticky top-0 z-30 border-b border-slate-200 bg-slate-50/80 backdrop-blur">
       <div className="flex items-center justify-between px-6 py-4">
         <div className="min-w-0">
-          <div className="text-sm font-extrabold text-slate-900">Dashboard Siswa</div>
-          <div className="text-xs text-slate-500">Pilih menu, tambah keranjang, lalu checkout.</div>
+          <div className="text-3xl text-purple-700 font-extrabold">Selamat Datang Kembali</div>
         </div>
 
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={open}
-            className="rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm font-extrabold text-slate-800 hover:bg-slate-50"
+            className="rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm font-extrabold text-slate-800 hover:bg-violet-400"
           >
             Keranjang ({totalQty})
           </button>
 
-          <Link
-            href="/siswa/dashboard/profil"
-            className="rounded-2xl bg-purple-600 px-4 py-2 text-sm font-extrabold text-white hover:bg-purple-700"
-          >
-            Profil
-          </Link>
         </div>
       </div>
     </header>

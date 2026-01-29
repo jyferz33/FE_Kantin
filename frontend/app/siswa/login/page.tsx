@@ -61,15 +61,15 @@ export default function Home() {
           (typeof data === "object" && data !== null));
 
       if (isSuccess) {
-  // ✅ simpan session + token siswa
-  saveRoleSession("siswa", data);
+        // ✅ simpan session + token siswa
+        saveRoleSession("siswa", data);
 
-  alert("Login berhasil!");
-  router.push("/siswa/dashboard");
-} else {
-  alert("Login gagal!");
-  console.log("Login gagal response:", data);
-}
+        alert("Login berhasil!");
+        router.push("/siswa/dashboard");
+      } else {
+        alert("Login gagal!");
+        console.log("Login gagal response:", data);
+      }
 
     } catch (err) {
       alert("Login gagal! (Network / CORS / Server error)");
@@ -84,13 +84,13 @@ export default function Home() {
       <div className="grid min-h-screen w-full grid-cols-1 lg:grid-cols-2">
         <section className="flex items-center justify-center px-8 py-12 lg:px-20">
           <div className="w-full max-w-xl">
-            <div className="mb-14 flex items-center gap-3">
-              <span className="h-3 w-3 rounded-sm bg-violet-600" />
-              <span className="text-base font-semibold text-slate-700">
-                KantinKu
-              </span>
+            <div className="-ml-6 mb-3">
+              <img
+                src="/image/kantinlogo.png"
+                alt="KantinKu"
+                className="h-28 w-auto object-contain lg:h-32"
+              />
             </div>
-
             <h1 className="text-5xl font-extrabold leading-tight text-slate-900 lg:text-6xl">
               Selamat Datang
             </h1>
@@ -124,24 +124,6 @@ export default function Home() {
                 />
               </div>
 
-              <div className="flex items-center justify-between pt-2">
-                <label className="flex items-center gap-3 text-sm text-slate-600">
-                  <input
-                    type="checkbox"
-                    className="h-5 w-5 rounded border-slate-300 text-violet-600 focus:ring-violet-500"
-                    defaultChecked
-                  />
-                  Remember me
-                </label>
-
-                <button
-                  type="button"
-                  className="text-sm font-medium text-slate-500 hover:text-violet-600"
-                >
-                  Forgot Password?
-                </button>
-              </div>
-
               {/* ✅ tombol submit untuk login */}
               <button
                 type="submit"
@@ -151,7 +133,7 @@ export default function Home() {
                 {loading ? "Loading..." : "Sign In"}
               </button>
 
-              <p className="pt-1 text-sm text-slate-500">
+              <p className="pt-10 text-sm text-slate-500">
                 Don&apos;t have an account?{" "}
                 <Link
                   href="/siswa/register"

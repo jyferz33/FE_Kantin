@@ -86,11 +86,12 @@ export default function AdminLoginPage() {
         <section className="flex items-center justify-center px-8 py-12 lg:px-20">
           <div className="w-full max-w-xl">
             {/* Brand */}
-            <div className="mb-14 flex items-center gap-3">
-              <span className="h-3 w-3 rounded-sm bg-violet-600" />
-              <span className="text-base font-semibold text-slate-700">
-                KantinKu
-              </span>
+            <div className="-ml-6 mb-3">
+              <img
+                src="/image/kantinlogo.png"
+                alt="KantinKu"
+                className="h-28 w-auto object-contain lg:h-32"
+              />
             </div>
 
             <h1 className="text-5xl font-extrabold leading-tight text-slate-900 lg:text-6xl">
@@ -124,15 +125,15 @@ export default function AdminLoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="mt-3 inline-flex w-44 items-center justify-center rounded-xl bg-violet-600 px-6 py-4 text-center text-base font-semibold text-white hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-60"
+                className="whitespace-nowrap mt-3 inline-flex w-44 items-center justify-center rounded-xl bg-violet-600 px-72 py-4 text-center text-base font-semibold text-white hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? "Loading..." : "Sign In"}
               </button>
 
-              <p className="pt-10 text-sm text-slate-500">
-                Belum punya akun admin?{" "}
+              <p className="pt-1 text-sm text-slate-500">
+                Don&apos;t have an account?{" "}
                 <Link
-                  href="/admin/register"
+                  href="/siswa/register"
                   className="font-semibold text-violet-600 hover:underline"
                 >
                   Sign Up
