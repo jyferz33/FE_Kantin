@@ -167,7 +167,7 @@ export default function ProfilSiswaEditPage() {
       }
 
       alert(data?.message ?? "Profil berhasil diupdate ✅");
-      router.push("/siswa/dashboard/profile");
+      router.push("/siswa/dashboard/profil");
       router.refresh?.();
     } catch (e: any) {
       console.error(e);
@@ -233,7 +233,7 @@ export default function ProfilSiswaEditPage() {
         ) : (
           <form onSubmit={onSave} className="space-y-4">
             {err ? (
-              <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm font-semibold text-red-700">
+              <div className="rounded-2xl border border-purple-200 bg-purple-50 p-4 text-sm font-semibold text-purple-700">
                 {err}
               </div>
             ) : null}
@@ -242,7 +242,7 @@ export default function ProfilSiswaEditPage() {
             <div className="rounded-2xl border border-slate-200 p-5">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="grid h-10 w-10 place-items-center rounded-2xl bg-red-50 text-red-600">
+                  <div className="grid h-10 w-10 place-items-center rounded-2xl bg-purple-100 text-purple-600">
                     <Camera className="h-5 w-5" />
                   </div>
                   <div>
@@ -314,7 +314,7 @@ export default function ProfilSiswaEditPage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-red-500 px-5 py-3 text-sm font-extrabold text-white shadow-sm hover:bg-red-600 disabled:opacity-60"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-purple-600 px-5 py-3 text-sm font-extrabold text-white shadow-sm hover:bg-purple-700 disabled:opacity-60"
               >
                 <Save className="h-4 w-4" />
                 {saving ? "Menyimpan..." : "Simpan Perubahan"}
@@ -347,7 +347,7 @@ function Field({
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-5">
       <div className="flex items-start gap-3">
-        <div className="grid h-10 w-10 place-items-center rounded-2xl bg-red-50 text-red-600">
+        <div className="grid h-10 w-10 place-items-center rounded-2xl bg-purple-50 text-purple-600">
           {icon}
         </div>
         <div className="min-w-0 flex-1">
@@ -356,7 +356,7 @@ function Field({
             value={value}
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
-            className="mt-2 h-11 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-900 outline-none focus:border-red-300"
+            className="mt-2 h-11 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-900 outline-none focus:border-purple-500"
           />
         </div>
       </div>

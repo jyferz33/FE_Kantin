@@ -168,6 +168,7 @@ export default function MenuSiswaPage() {
       {
         id_menu: id,
         nama_makanan: String(menu.nama_makanan ?? "Menu"),
+          deskripsi: String(menu.deskripsi ?? ""), // ✅ TAMBAH INI
         harga: Number.isNaN(hargaNum) ? 0 : hargaNum,
         fotoUrl: getFotoUrl(menu) || undefined,
         stanName: pickStanName(menu),
@@ -175,6 +176,7 @@ export default function MenuSiswaPage() {
       },
       1
     );
+    
 
     // supaya pasti muncul drawer walau addItem kamu tidak auto-open
     openCart();
@@ -218,14 +220,6 @@ export default function MenuSiswaPage() {
               Minuman
             </button>
 
-            {/* Cart button */}
-            <button
-              type="button"
-              onClick={openCart}
-              className="ml-1 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 hover:bg-slate-50"
-            >
-              Keranjang ({totalQty})
-            </button>
           </div>
 
           {/* Search */}
@@ -236,7 +230,7 @@ export default function MenuSiswaPage() {
               onKeyDown={(e) => {
                 if (e.key === "Enter") load(search);
               }}
-              placeholder='Cari menu (contoh: "rujak")...'
+              placeholder='Cari menu...'
               className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100 lg:w-72"
             />
             <button
@@ -279,72 +273,81 @@ export default function MenuSiswaPage() {
         </div>
       ) : null}
 
-      {/* Grid Menu */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {loading ? (
-          <div className="rounded-3xl border border-slate-200 bg-white p-6 text-sm text-slate-500 sm:col-span-2 lg:col-span-3">
-            Memuat menu...
-          </div>
-        ) : rows.length === 0 ? (
-          <div className="rounded-3xl border border-slate-200 bg-white p-6 text-sm text-slate-500 sm:col-span-2 lg:col-span-3">
-            Tidak ada menu untuk tab <b>{tab}</b>.
-          </div>
-        ) : (
-          rows.map((it, idx) => {
-            const id = getId(it) || idx;
-            const fotoUrl = getFotoUrl(it);
-            const stanName = pickStanName(it);
+    {/* Grid Menu */}
+<div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+  {loading ? (
+    <div className="rounded-3xl border border-slate-200 bg-white p-6 text-sm text-slate-500 sm:col-span-2 lg:col-span-4">
+      Memuat menu...
+    </div>
+  ) : rows.length === 0 ? (
+    <div className="rounded-3xl border border-slate-200 bg-white p-6 text-sm text-slate-500 sm:col-span-2 lg:col-span-4">
+      Tidak ada menu untuk tab <b>{tab}</b>.
+    </div>
+  ) : (
+    rows.map((it, idx) => {
+      const id = getId(it) || idx;
+      const fotoUrl = getFotoUrl(it);
 
-            return (
-              <div
-                key={id}
-                className="rounded-3xl border border-slate-200 bg-white p-5 transition hover:border-purple-300 hover:shadow-md"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <div className="truncate text-sm font-extrabold text-slate-900">
-                      {it.nama_makanan ?? "-"}
-                    </div>
-                    <div className="mt-1 truncate text-sm text-slate-600">
-                      Dari: <span className="font-semibold">{stanName}</span>
-                    </div>
-                  </div>
-                  <div className="shrink-0 rounded-full bg-purple-50 px-3 py-1 text-xs font-bold text-purple-700">
-                    {formatRupiah(it.harga)}
-                  </div>
-                </div>
-
-                <div className="mt-4 overflow-hidden rounded-2xl border border-slate-100 bg-slate-50">
-                  {fotoUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={fotoUrl}
-                      alt={it.nama_makanan ?? "foto"}
-                      className="h-36 w-full object-cover"
-                    />
-                  ) : (
-                    <div className="flex h-36 items-center justify-center text-xs text-slate-400">
-                      Tidak ada foto
-                    </div>
-                  )}
-                </div>
-
-                <div className="mt-3 text-sm text-slate-600">
-                  <div className="line-clamp-2">{it.deskripsi ?? "—"}</div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => handlePesan(it)}
-                  className="mt-4 w-full rounded-2xl bg-purple-600 px-4 py-3 text-sm font-extrabold text-white hover:bg-purple-700"
-                >
-                  Pesan
-                </button>
+      return (
+        <div
+          key={id}
+          className="overflow-hidden rounded-3xl border border-slate-200 bg-white transition hover:border-purple-300 hover:shadow-md"
+        >
+          {/* GAMBAR (full cover, boleh kepotong) */}
+          <div className="bg-slate-50">
+            {fotoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={fotoUrl}
+                alt={it.nama_makanan ?? "foto"}
+                className="h-56 w-full object-cover"
+              />
+            ) : (
+              <div className="flex h-56 items-center justify-center text-xs text-slate-400">
+                Tidak ada foto
               </div>
-            );
-          })
-        )}
-      </div>
+            )}
+          </div>
+
+          {/* KONTEN */}
+          <div className="p-5">
+            <div className="space-y-2">
+              <div className="text-sm font-semibold text-slate-500">
+                Nama:{" "}
+                <span className="font-extrabold text-slate-900">
+                  {it.nama_makanan ?? "-"}
+                </span>
+              </div>
+
+              <div className="text-sm font-semibold text-slate-500">
+                Deskripsi:{" "}
+                <span className="font-bold text-slate-700 line-clamp-2">
+                  {it.deskripsi ?? "—"}
+                </span>
+              </div>
+            </div>
+
+            {/* HARGA pojok kanan bawah */}
+            <div className=" flex items-end justify-end">
+              <div className="text-lg font-extrabold text-purple-700">
+                {formatRupiah(it.harga)}
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => handlePesan(it)}
+              className="mt-4 w-full rounded-2xl bg-purple-600 px-4 py-3 text-sm font-extrabold text-white hover:bg-purple-700"
+            >
+              Pesan
+            </button>
+          </div>
+        </div>
+      );
+    })
+  )}
+</div>
+
     </div>
   );
 }

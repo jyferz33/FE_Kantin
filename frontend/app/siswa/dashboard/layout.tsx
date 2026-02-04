@@ -4,9 +4,11 @@ import { CartProvider } from "@/components/siswa/cart-provider";
 import CartDrawer from "@/components/siswa/cart-drawer";
 import NavbarSiswa, { SIDEBAR_W } from "@/components/siswa/NavbarSiswa";
 import HeaderSiswa from "@/components/siswa/HeaderSiswa";
+import { QueryProvider } from "@/components/providers/query-provider";
 
 export default function DashboardSiswaLayout({ children }: { children: ReactNode }) {
   return (
+    <QueryProvider>
     <CartProvider>
       <div className="min-h-screen bg-slate-50">
         <NavbarSiswa />
@@ -20,5 +22,7 @@ export default function DashboardSiswaLayout({ children }: { children: ReactNode
         <CartDrawer />
       </div>
     </CartProvider>
+    
+    </QueryProvider>
   );
 }

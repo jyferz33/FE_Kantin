@@ -122,7 +122,7 @@ export default function DashboardSiswaPage() {
   return (
     <div className="space-y-6">
       {/* HERO */}
-      <div className="rounded-[2.25rem] border border-purple-100 bg-gradient-to-br from-purple-200 via-white to-purple-200 p-8 lg:p-10">
+      <div className="rounded-[2.25rem] border border-purple-100 bg-linear-to-br from-purple-200 via-white to-purple-200 p-8 lg:p-10">
         <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
           <div className="max-w-2xl">
             <h1 className="text-3xl font-extrabold leading-tight text-slate-900 lg:text-5xl">

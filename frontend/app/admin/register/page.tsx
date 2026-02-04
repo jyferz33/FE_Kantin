@@ -83,7 +83,7 @@ export default function RegisterAdminPage() {
       <div className="grid min-h-screen w-full grid-cols-1 lg:grid-cols-2">
         {/* LEFT - IMAGE */}
         <section className="relative hidden lg:block h-screen w-full">
-          <div className="absolute inset-0 overflow-hidden bg-gradient-to-br from-violet-500 to-indigo-500">
+          <div className="absolute inset-0 overflow-hidden bg-linear-to-br from-violet-500 to-indigo-500">
             {/* Clouds */}
             <div className="absolute -left-20 top-10 h-28 w-72 rounded-full bg-white/30 blur-sm" />
             <div className="absolute -right-24 top-16 h-32 w-80 rounded-full bg-white/30 blur-sm" />

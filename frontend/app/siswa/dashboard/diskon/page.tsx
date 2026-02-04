@@ -212,7 +212,7 @@ export default function MenuDiskonSiswaPage() {
             <button
               type="button"
               onClick={() => load(search)}
-              className="rounded-2xl bg-red-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-red-700"
+              className="rounded-2xl bg-purple-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-purple-700"
             >
               Cari
             </button>
@@ -242,7 +242,7 @@ export default function MenuDiskonSiswaPage() {
           <button
             type="button"
             onClick={() => load(search)}
-            className="mt-3 rounded-2xl bg-rose-600 px-4 py-2 text-sm font-bold text-white hover:bg-rose-700"
+            className="mt-3 rounded-2xl bg-purple-600 px-4 py-2 text-sm font-bold text-white hover:bg-purple-700"
           >
             Coba Lagi
           </button>
@@ -271,7 +271,7 @@ export default function MenuDiskonSiswaPage() {
                 className="relative rounded-3xl border border-slate-200 bg-white p-5 transition hover:border-purple-300 hover:shadow-md"
               >
                 {/* Badge */}
-                <div className="absolute right-4 top-4 rounded-full bg-rose-600 px-3 py-1 text-xs font-extrabold text-white">
+                <div className="absolute right-4 top-4 rounded-full bg-purple-600 px-3 py-1 text-xs font-extrabold text-white">
                   {persen}% OFF
                 </div>
 
@@ -282,13 +282,13 @@ export default function MenuDiskonSiswaPage() {
                     </div>
                     <div className="mt-1 truncate text-xs text-slate-500">
                       Diskon:{" "}
-                      <span className="font-bold text-red-700">
+                      <span className="font-bold text-purple-700">
                         {it.nama_diskon ?? "-"}
                       </span>
                     </div>
                   </div>
 
-                  <div className="shrink-0 rounded-full bg-purple-50 px-3 py-1 text-xs font-bold text-red-700">
+                  <div className="shrink-0 rounded-full px-3 py-1 text-xs font-bold text-purple-700">
                     {formatRupiah(hargaDiskon)}
                   </div>
                 </div>
@@ -329,7 +329,7 @@ export default function MenuDiskonSiswaPage() {
                 <button
                   type="button"
                   onClick={() => handlePesan(it)}
-                  className="mt-4 w-full rounded-2xl bg-red-600 px-4 py-3 text-sm font-extrabold text-white hover:bg-red-700"
+                  className="mt-4 w-full rounded-2xl bg-purple-600 px-4 py-3 text-sm font-extrabold text-white hover:bg-purple-700"
                 >
                   Pesan
                 </button>

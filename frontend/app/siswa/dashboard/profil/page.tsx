@@ -162,7 +162,7 @@ export default function ProfilSiswaPage() {
             <div className="md:col-span-2 mt-2 flex justify-end">
               <Link
                 href="/siswa/dashboard/profil/edit"
-                className="inline-flex items-center gap-2 rounded-2xl bg-red-500 px-5 py-3 text-sm font-extrabold text-white hover:bg-red-600"
+                className="inline-flex items-center gap-2 rounded-2xl bg-purple-600 px-5 py-3 text-sm font-extrabold text-white hover:bg-purple-700"
               >
                 ✏️ Edit Profil
               </Link>
@@ -186,7 +186,7 @@ function InfoRow({
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-5">
       <div className="flex items-start gap-3">
-        <div className="grid h-10 w-10 place-items-center rounded-2xl bg-red-50 text-red-600">
+        <div className="grid h-10 w-10 place-items-center rounded-2xl bg-purple-100 text-purple-600">
           {icon}
         </div>
         <div className="min-w-0">

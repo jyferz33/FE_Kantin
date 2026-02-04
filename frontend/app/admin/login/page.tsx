@@ -133,7 +133,7 @@ export default function AdminLoginPage() {
               <p className="pt-1 text-sm text-slate-500">
                 Don&apos;t have an account?{" "}
                 <Link
-                  href="/siswa/register"
+                  href="/admin/register"
                   className="font-semibold text-violet-600 hover:underline"
                 >
                   Sign Up
@@ -145,7 +145,7 @@ export default function AdminLoginPage() {
 
         {/* RIGHT - IMAGE */}
         <section className="relative hidden h-screen w-full lg:block">
-          <div className="absolute inset-0 overflow-hidden bg-gradient-to-br from-violet-500 to-indigo-500">
+          <div className="absolute inset-0 overflow-hidden bg-linear-to-br from-violet-500 to-indigo-500">
             <div className="absolute -left-20 top-10 h-28 w-72 rounded-full bg-white/30 blur-sm" />
             <div className="absolute -right-24 top-16 h-32 w-80 rounded-full bg-white/30 blur-sm" />
             <div className="absolute left-10 bottom-14 h-28 w-72 rounded-full bg-white/25 blur-sm" />

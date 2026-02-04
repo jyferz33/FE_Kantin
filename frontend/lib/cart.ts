@@ -4,7 +4,7 @@ export type CartItem = {
   nama_makanan: string;
   harga: number;
   qty: number;
-
+  deskripsi?: string; // ✅ TAMBAH INI
   fotoUrl?: string;
   stanName?: string;
   raw?: any;

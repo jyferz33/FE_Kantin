@@ -187,7 +187,7 @@ export default function HistoriPage() {
           <button
             type="button"
             onClick={() => loadMonth(year, monthIdx)}
-            className="h-11 rounded-2xl bg-red-500 px-4 text-sm font-extrabold text-white hover:bg-red-600"
+            className="h-11 rounded-2xl bg-purple-600 px-4 text-sm font-extrabold text-white hover:bg-purple-700"
           >
             Refresh
           </button>
@@ -213,7 +213,7 @@ export default function HistoriPage() {
             >
               −
             </button>
-            <div className="h-10 min-w-[90px] grid place-items-center rounded-2xl bg-slate-900 px-4 text-sm font-extrabold text-white">
+            <div className="h-10 min-w-[90px] grid place-items-center rounded-2xl bg-purple-600 px-4 text-sm font-extrabold text-white">
               {year}
             </div>
             <button
@@ -238,8 +238,8 @@ export default function HistoriPage() {
                 className={[
                   "rounded-2xl px-3 py-2 text-xs font-extrabold transition",
                   active
-                    ? "bg-red-500 text-white"
-                    : "border border-slate-200 bg-white text-slate-700 hover:bg-red-50 hover:text-red-600",
+                    ? "bg-purple-600 text-white"
+                    : "border border-slate-200 bg-white text-slate-700 hover:bg-purple-50 hover:text-purple-600",
                 ].join(" ")}
               >
                 {m}
@@ -262,14 +262,14 @@ export default function HistoriPage() {
         </div>
       ) : err ? (
         <div className="rounded-[2.25rem] border border-red-200 bg-white p-6">
-          <div className="rounded-2xl border border-red-200 bg-red-50 p-5 text-sm font-semibold text-red-700">
+          <div className="rounded-2xl border border-red-200 bg-red-50 p-5 text-sm font-semibold text-purple-700">
             {err}
           </div>
 
           <button
             type="button"
             onClick={() => router.refresh?.()}
-            className="mt-4 h-11 rounded-2xl bg-red-500 px-4 text-sm font-extrabold text-white hover:bg-red-600"
+            className="mt-4 h-11 rounded-2xl bg-purple-600 px-4 text-sm font-extrabold text-white hover:bg-purple-700"
           >
             Coba Lagi
           </button>
@@ -380,7 +380,7 @@ export default function HistoriPage() {
 
                 <button
                   type="button"
-                  className="mt-4 inline-flex w-full items-center justify-center rounded-2xl bg-slate-900 px-4 py-3 text-sm font-extrabold text-white hover:bg-slate-800"
+                  className="mt-4 inline-flex w-full items-center justify-center rounded-2xl bg-purple-600 px-4 py-3 text-sm font-extrabold text-white hover:bg-purple-800"
                   onClick={() =>
                     alert(
                       "Detail order belum dibuat (menunggu endpoint detail)."
